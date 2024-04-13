@@ -1,0 +1,79 @@
+﻿@model IEnumerable<WebBanThu.Areas.Admin.Models.Bill>
+
+@{
+    ViewData["Title"] = "DanhSachBillByKH";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Danh Sach Hoa Don</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+          
+            <th>
+                Giá
+            </th>
+            <th>
+                Thời Gian
+            </th>
+            <th>
+                Tên Khách
+            </th>
+            <th>
+                Trang thái
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                    @{
+                        string parameterValue = item.dateTime.DateTime.ToString();
+                    }
+                @Html.DisplayFor(modelItem => parameterValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+                <td>
+                    @if (item.Status == 0)
+                    {
+                        <p>Chưa Giao Hàng</p>
+                    }
+                    else if (item.Status == 1)
+                    {
+                        <p>Đã Giao Hàng</p>
+                    }
+                    else if (item.Status == 2)
+                    {
+                        <p>Đang xử lý yêu cầu hủy đơn</p>
+                    }
+                    else if (item.Status == 3)
+                    {
+                        <p>đơn đã được hủy</p>
+                    }
+                </td>
+            <td>
+                    @if(item.Status == 1 || item.Status == 0)
+                    {
+                        <a class="btn btn-primary" href="@Url.Action("XemChiTietHoaDon", "Home", new { IdBill = item.Id })">Chi tiết</a>
+                    }
+                   
+                    @if(item.Status == 0)
+                    {
+                        <a class="btn btn-primary" href="@Url.Action("HuyDon", "Home", new { IdBill = item.Id })">Hủy Đơn</a>
+                    }
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

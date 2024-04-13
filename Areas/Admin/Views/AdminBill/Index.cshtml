@@ -1,0 +1,165 @@
+﻿@model IEnumerable<WebBanThu.Areas.Admin.Models.Bill>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<h1>Hóa Đơn</h1>
+
+<section class="content">
+    <div class="container-fluid">        
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>
+                        <th>
+                            Tổng tiền
+                        </th>
+                        <th>
+                            thời gian đặt hàng
+                        </th>
+                        <th>
+                            tên khách hàng
+                        </th>
+                        <th>
+                            Trạng Thái Đơn Hàng
+                        </th>
+                         <th>
+                            Bảo hành
+                        </th>
+                                    
+                        <th>
+                            Thao Tác
+                        </th>
+                    </tr>
+                </thead>
+                            <tfoot>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>
+                        <th>
+                            Tổng tiền
+                        </th>
+                        <th>
+                            thời gian đặt hàng
+                        </th>
+                        <th>
+                            tên khách hàng
+                        </th>
+                        <th>
+                            Trạng Thái Đơn Hàng
+                        </th>
+                        <th>
+                            bảo hành
+                        </th>
+                        <th>
+                            Thao Tác
+                        </th>
+                    </tr>
+                </tfoot>
+                            <tbody>
+                    @foreach (var item in Model)
+                    {
+                            <tr>
+                                <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                                </td>
+                                <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                                </td>
+                                <td>
+                                @Html.DisplayFor(modelItem => item.dateTime)
+                                </td>
+                                <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                        <td>
+                                            @if (item.Status == 0)
+                                            {
+                                                <p>Chưa thanh toán</p>
+                                            }
+                                            else if (item.Status == 1)
+                                            {
+                                                <p>Đã thanh toán</p>
+                                            }
+                                            else if (item.Status == 2)
+                                            {
+                                                <p>khách hàng yếu cầu hủy đơn</p>
+                                            }
+                                            else if (item.Status == 3)
+                                            {
+                                                <p>đơn đã được hủy</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Status == 1)
+                                            {
+                                                <p>thời gian bảo hành là 2 tháng tính từ: </p> @Html.DisplayFor(modelItem => item.dateTime.DateTime)
+                                                
+                                            }
+                                        </td>
+                                <td>
+                                            @if(item.Status == 0)
+                                            {
+                                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-danger btn-icon-split">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-trash"></i>
+                                                    </span>
+                                                    <span class="text">Xem</span>
+                                                </a>
+                                                <form method="post" asp-action="Edit" asp-route-id="@item.Id">
+                                                    <button class="btn btn-danger btn-icon-split">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-trash"></i>
+                                                        </span>
+                                                        <span class="text">Cập Nhật Trạng Thái</span>
+                                                    </button>
+                                                </form>
+                                            }
+                                            @if(item.Status == 1)
+                                            {
+                                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-danger btn-icon-split">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-trash"></i>
+                                                    </span>
+                                                    <span class="text">Xem</span>
+                                                </a>
+                                            }
+
+                                            
+                                            @if(item.Status == 2)
+                                            {
+                                                <form method="post" asp-action="HuyDon" asp-route-id="@item.Id">
+                                                    <button class="btn btn-danger btn-icon-split">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-trash"></i>
+                                                        </span>
+                                                        <span class="text">Xác nhận hủy</span>
+                                                    </button>
+                                                </form>
+                                            }
+
+
+                         
+                                </td>
+
+                            </tr>
+                    }
+                </tbody>
+                        </table>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+</section>
