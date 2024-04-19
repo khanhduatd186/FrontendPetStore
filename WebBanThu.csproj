@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="EO.WebBrowser" Version="23.3.77" />
     <PackageReference Include="MailKit" Version="4.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.25" />
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.30.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.30.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.14" />
@@ -108,6 +109,14 @@
     <None Include="wwwroot\libUser\owlcarousel\owl.carousel.min.js" />
     <None Include="wwwroot\libUser\waypoints\links.php" />
     <None Include="wwwroot\libUser\waypoints\waypoints.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Areas\Admin\Views\AdminServiceCart\Create.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\AdminServiceCart\Delete.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\AdminServiceCart\Details.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\AdminServiceCart\Edit.cshtml" />
+    <AdditionalFiles Include="Areas\Admin\Views\AdminServiceCart\Index.cshtml" />
   </ItemGroup>
 
 </Project>

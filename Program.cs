@@ -6,11 +6,13 @@ using WebBanThu.Interface;
 using WebBanThu.Models;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
-builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 // Add services to the container.
+builder.Services.AddRazorPages()
+    .AddRazorRuntimeCompilation();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {

@@ -29,15 +29,33 @@ namespace WebBanThu.Controllers
 
             return View();
         }
+        static string GetCharactersBeforeH(string input)
+        {
+            // Tìm vị trí của chữ 'h' đầu tiên trong chuỗi
+            int indexOfFirstH = input.IndexOf('h');
+
+            // Kiểm tra nếu chữ 'h' tồn tại trong chuỗi
+            if (indexOfFirstH != -1)
+            {
+                // Lấy chuỗi ký tự trước chữ 'h'
+                string charactersBeforeH = input.Substring(0, indexOfFirstH);
+                return charactersBeforeH;
+            }
+
+            // Trả về null nếu không tìm thấy chữ 'h'
+            return null;
+        }
 
 
+        [Authorize(Roles = "CUTOMER")]
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
 
             client.BaseAddress = new Uri(domain);
-       
-       
+            var currentDate = int.Parse(DateTime.Now.Hour.ToString());
+
+
             try
             {
                 ViewBag.Domain = domain;
@@ -58,11 +76,14 @@ namespace WebBanThu.Controllers
                     List<TimeModel> times = new List<TimeModel>();
                     foreach(var i in list)
                     {
+                        
                         string datajson1 = await client.GetStringAsync("api/Time/" + i.IdTime);
                         TimeModel time = JsonConvert.DeserializeObject<TimeModel>(datajson1);
+                        if((int.Parse(GetCharactersBeforeH(time.StartTime)) - currentDate) >0)
+                        {
+                            times.Add(time);
+                        }
         
-                        times.Add(time);
-    
                     }
                     ViewBag.Times = times;
                     ViewBag.Times1 = new SelectList(times, "Id", "StartTime");
@@ -93,19 +114,20 @@ namespace WebBanThu.Controllers
         //}
         [HttpPost]
         [Authorize(Roles = "CUTOMER")]
-        public async Task<IActionResult> DatLich(string email, int IdService, string Time, string SelectedTime)
+        public async Task<IActionResult> DatLich(AddNewServiceCartModel request)
         {
+            
             client.BaseAddress = new Uri(domain);
-            HttpResponseMessage datajson = client.GetAsync("api/Account/GetUseByEmail/" + email).Result;
+            HttpResponseMessage datajson = client.GetAsync("api/Account/GetUseByEmail/" + request.Email).Result;
             string data1 = datajson.Content.ReadAsStringAsync().Result;
             SignUpModel user = JsonConvert.DeserializeObject<SignUpModel>(data1);
             Service_CartModel p = new Service_CartModel
             {
-                Time = SelectedTime,
-                IdServie = IdService,
+                Time = request.Time,
+                IdServie = request.IdServie,
                 IdUser = user.id,
-                Quantity = 0,
-                Price = 0,
+                Quantity = 1,
+                Price = request.Price,
                 dateTime = DateTime.Now
             };
             try
@@ -117,6 +139,7 @@ namespace WebBanThu.Controllers
                 HttpResponseMessage responseMessage = client.PostAsync("api/Service_Cart", content).Result;
                 if (responseMessage.IsSuccessStatusCode)
                 {
+                    
                     TempData["successMessage"] = "Service_Cart Created";
                     return RedirectToAction("Index");
                 }
@@ -151,11 +174,40 @@ namespace WebBanThu.Controllers
                     HttpResponseMessage datajson1 = client.GetAsync("api/Service/" + i.IdServie).Result;
                     string data2 = datajson1.Content.ReadAsStringAsync().Result;
                     ServiceModel service = JsonConvert.DeserializeObject<ServiceModel>(data2);
-                    Service_Cart service_Cart = new Service_Cart { dateTime = i.dateTime, Name = user.Name, Title = service.Tittle, Time = i.Time };
+                    Service_Cart service_Cart = new Service_Cart { dateTime = i.dateTime, Name = user.Name, Title = service.Tittle, Time = i.Time, Price = i.Price};
                     Service.Add(service_Cart);
                 }
             }
                 
+
+            return View(Service);
+        }
+        public async Task<IActionResult> HuyDon()
+        {
+
+            ViewBag.Domain = domain;
+            client.BaseAddress = new Uri(domain);
+            HttpResponseMessage datajson = client.GetAsync("api/Account/GetUseByEmail/" + User.Identity.Name).Result;
+            string data1 = datajson.Content.ReadAsStringAsync().Result;
+            SignUpModel user = JsonConvert.DeserializeObject<SignUpModel>(data1);
+            List<Service_CartModel> Service_Details = new List<Service_CartModel>();
+            List<Service_Cart> Service = new List<Service_Cart>();
+            HttpResponseMessage responseMessage = client.GetAsync("api/Service_Cart/" + user.id).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                Service_Details = JsonConvert.DeserializeObject<List<Service_CartModel>>(data);
+                foreach (var i in Service_Details)
+                {
+                    HttpResponseMessage datajson1 = client.GetAsync("api/Service/" + i.IdServie).Result;
+                    string data2 = datajson1.Content.ReadAsStringAsync().Result;
+                    ServiceModel service = JsonConvert.DeserializeObject<ServiceModel>(data2);
+                    Service_Cart service_Cart = new Service_Cart { dateTime = i.dateTime, Name = user.Name, Title = service.Tittle, Time = i.Time, Price = i.Price };
+                    Service.Add(service_Cart);
+                }
+            }
+
 
             return View(Service);
         }

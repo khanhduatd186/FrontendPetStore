@@ -260,7 +260,47 @@ namespace WebBanThu.Areas.Admin.Controllers
             }
 
         }
-    
+        public async Task<IActionResult> Details_Service(int id)
+
+        {
+
+            try
+            {
+                ViewBag.Domain = domain;
+                client.BaseAddress = new Uri(domain);
+
+                BillModel Bill = new BillModel();
+                HttpResponseMessage response = client.GetAsync("api/Bill/" + id).Result;
+                List<Service_BillModel> service_Bills = new List<Service_BillModel>();
+                List<Service_Bill> service_Bill = new List<Service_Bill>();
+                if (response.IsSuccessStatusCode)
+                {
+                   
+                    string data = response.Content.ReadAsStringAsync().Result;
+                    Bill = JsonConvert.DeserializeObject<BillModel>(data);
+                    HttpResponseMessage datajson = client.GetAsync("api/Service_Bill/" + Bill.Id).Result;
+                    string data1 = datajson.Content.ReadAsStringAsync().Result;
+                    
+                    service_Bills = JsonConvert.DeserializeObject<List<Service_BillModel>>(data1);
+                    foreach (var i in service_Bills)
+                    {
+                        string datajson1 = await client.GetStringAsync("api/Service/" + i.IdService);
+                        ServiceModel serviceModel = JsonConvert.DeserializeObject<ServiceModel>(datajson1);
+                        var newService = new Service_Bill { Tittle = serviceModel.Tittle, Price = i.Price, Quantity = i.Quantity };
+
+                        service_Bill.Add(newService);
+                    }
+
+                }
+                return View(service_Bill);
+            }
+            catch (Exception ex)
+            {
+                TempData["errorMessage"] = ex.Message;
+                return View();
+            }
+
+        }
 
         [HttpGet]
 

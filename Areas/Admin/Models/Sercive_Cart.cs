@@ -11,6 +11,7 @@ namespace WebBanThu.Areas.Admin.Models
         public string Name { get; set; }
         public DateTime? dateTime { get; set; }
         public string Time { get; set; }
+        public double Price { get; set; }
     }
  
 }

@@ -1,0 +1,88 @@
+﻿@using Domain.Helpers
+@model List<WebBanThu.Areas.Admin.Models.Service_CartModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<section class="content">
+    <div class="container-fluid">
+        <h1>Quản Lý Lịch Hẹn</h1>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    ID Dịch Vụ
+                                </th>
+                                <th>
+                                    Giá
+                                </th>
+                                <th>
+                                    Người Đặt
+                                </th>
+                                <th>
+                                    Khung Giờ
+                                </th>
+                                <th>
+                                    Ngày Hẹn
+                                </th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>
+                                    ID Dịch Vụ
+                                </th>
+                                <th>
+                                    Giá
+                                </th>
+                                <th>
+                                    Người Đặt
+                                </th>
+                                <th>
+                                    Khung Giờ
+                                </th>
+                                <th>
+                                    Ngày Hẹn
+                                </th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.IdServie
+                                    </td>
+                                    <td>
+                                        @item.Price.FormatDoubleCurrency()
+                                    </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.Time
+                                    </td>
+                                    <td>
+                                        @if (item.dateTime.HasValue)
+                                        {
+                                            @item.dateTime.ToString().Split(" ").First()
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

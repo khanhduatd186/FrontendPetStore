@@ -26,7 +26,7 @@ namespace WebBanThu.Controllers
         private readonly string _clientId;
         private readonly string _secretKey;
         private readonly IOptions<MomoOptionModel> _options;
- 
+    
      
 
         public ShoppingCartController(IHttpContextAccessor httpContextAccessor,IConfiguration config, IOptions<MomoOptionModel> options)
@@ -515,6 +515,7 @@ namespace WebBanThu.Controllers
                             string subject = "Thanh toán thành công";
                             string body = "Thanh toán của bạn đã thành công.";
                             //_email.SendPaymentConfirmationEmail(to, subject, body,ProductImages);
+                            return RedirectToAction(nameof(Cart));
 
                         }
                         
@@ -522,7 +523,7 @@ namespace WebBanThu.Controllers
                 }
 
             }
-            return RedirectToAction(nameof(Cart));
+            return BadRequest();
         }
         private string ComputeHmacSha256(string message, string secretKey)
         {

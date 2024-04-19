@@ -24,11 +24,14 @@ namespace WebBanThu.Controllers
         {
             ViewBag.Domain = domain;
             client.BaseAddress = new Uri(domain);
-     
+            string datajson = await client.GetStringAsync("api/Service/GET_ALL");
+            List<ServiceModel> services = JsonConvert.DeserializeObject<List<ServiceModel>>(datajson).Take(3).ToList();
 
             string datajson1 = await client.GetStringAsync("api/Product/GET_ALL");
             List<ProductModel> products = JsonConvert.DeserializeObject<List<ProductModel>>(datajson1).Take(6).ToList();
             ViewBag.Products = products;
+
+            ViewBag.Services = services;
 
 
             return View(); 
