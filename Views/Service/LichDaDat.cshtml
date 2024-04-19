@@ -1,0 +1,64 @@
+﻿@using Domain.Helpers
+@model IEnumerable<WebBanThu.Areas.Admin.Models.Service_Cart>
+
+@{
+    ViewData["Title"] = "LichDaDat";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-12 ">
+
+            <div class="mb-5">
+
+                <h1 class="text-uppercase mb-4">Lịch Đã Đặt</h1>
+
+            </div>
+        </div>
+
+
+        <div class="col-lg-12 ">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        Dịch Vụ
+                    </th>
+                    <th>
+                        Giá Dịch Vụ
+                    </th>
+                    <th>
+                        Tên Khách Hàng
+                    </th>
+                    <th>
+                        Thời Gian
+                    </th>
+            
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @item.Price.FormatDoubleCurrency()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Time) @item.dateTime?.ToString()?.Split(" ")?.First()
+                        </td>
+            
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
